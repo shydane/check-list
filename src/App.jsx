@@ -1,33 +1,48 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="h-lvh">
+      <Logo />
+      <Form />
+      <Checklist />
+      <Stats />
+    </div>
+  );
+}
+
+function Logo() {
+  return (
+    <div className="bg-slate-700 text-slate-300 text-4xl text-center font-semibold p-5 tracking-tighter">
+      <h1>📝 GoCheck ✅</h1>
+    </div>
+  );
+}
+
+function Form() {
+  return (
+    <div className="bg-slate-600 text-slate-300 text-base text-center font-semibold p-3">
+      <h2>ada yang mau dicatat?</h2>
+    </div>
+  );
+}
+
+function Checklist() {
+  return (
+    <div>
+      <ul className="flex justify-around font-semibold p-5">
+        <li>Makan</li>
+        <li>Tidur</li>
+      </ul>
+    </div>
+  );
+}
+
+function Stats() {
+  return (
+    <footer className="bg-slate-700 text-slate-300 text-base text-center font-semibold p-3 absolute bottom-0">
+      <span>kamu punya x catatan dan baru x yang di checklist (x%) </span>
+    </footer>
   );
 }
 
