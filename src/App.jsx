@@ -1,16 +1,16 @@
 import { useState } from "react";
 
-const listItems = [
-  { id: 1, title: "Eat", done: false },
-  { id: 2, title: "Sleep", done: true },
-];
+// const listItems = [
+//   { id: 1, title: "Eat", done: false },
+//   { id: 2, title: "Sleep", done: true },
+// ];
 
 function App() {
   return (
     <div className="h-lvh">
       <Logo />
       <Form />
-      <Checklist />
+      {/* <Checklist /> */}
       <Stats />
     </div>
   );
@@ -26,52 +26,59 @@ function Logo() {
 
 function Form() {
   const [title, setTitle] = useState("");
+  const [notes, setNotes] = useState([
+    { id: 1, text: "Hello", done: true },
+    { id: 2, text: "World", done: false },
+    { id: 3, text: "mamam", done: false },
+  ]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(e.target.title.value);
+    // console.log(e.target.title.value);
   }
 
   return (
-    <form
-      className="bg-slate-600 text-slate-300 text-base text-center font-semibold p-3"
-      onSubmit={handleSubmit}
-    >
-      <h2>ada yang mau dicatat?</h2>
-      <input
-        className="m-4 rounded-xl text-black px-3 py-1"
-        type="text"
-        name="title"
-        id=""
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <button className="bg-green-400 rounded-lg px-3 py-1 text-white">
-        ADD
-      </button>
-    </form>
+    <>
+      <form
+        className="bg-slate-600 text-slate-300 text-base text-center font-semibold p-3"
+        onSubmit={handleSubmit}
+      >
+        <h2>ada yang mau dicatat?</h2>
+        <input
+          className="m-4 rounded-xl text-black px-3 py-1"
+          type="text"
+          name="title"
+          id=""
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <button className="bg-green-400 rounded-lg px-3 py-1 text-white">
+          ADD
+        </button>
+      </form>
+      <Checklist notes={notes} setNotes={setNotes} />
+    </>
   );
 }
 
-function Checklist() {
+function Checklist({ notes, setNotes }) {
   return (
     <div>
       <ul className="font-semibold p-5">
-        {listItems.map((item) => (
-          <Item key={item.id} item={item} />
+        {notes.map((note) => (
+          <Item key={note.id} note={note} />
         ))}
       </ul>
-      {/* <ul>{title}</ul> */}
     </div>
   );
 }
 
-function Item({ item }) {
+function Item({ note }) {
   return (
     <li>
       <input type="checkbox" />
-      <span className={item.done ? "line-through m-2" : "m-2"}>
-        {item.title}
+      <span className={note.done ? "line-through m-2" : "m-2"}>
+        {note.text}
       </span>
       <button>❌</button>
     </li>
