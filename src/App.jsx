@@ -75,12 +75,14 @@ function Checklist({ notes, setNotes }) {
 
 function Item({ note }) {
   return (
-    <li>
-      <input type="checkbox" />
-      <span className={note.done ? "line-through m-2" : "m-2"}>
-        {note.text}
-      </span>
-      <button>❌</button>
+    <li className="bg-slate-700 text-slate-300 text-white p-3 my-4 rounded-md flex justify-between">
+      <div>
+        <input type="checkbox" />
+        <span className={note.done ? "line-through m-2" : "m-2"}>
+          {note.text}
+        </span>
+      </div>
+      <button className="bg-red-500 rounded-md px-2 py-1">delete</button>
     </li>
   );
 }
