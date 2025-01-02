@@ -1,16 +1,10 @@
 import { useState } from "react";
 
-// const listItems = [
-//   { id: 1, title: "Eat", done: false },
-//   { id: 2, title: "Sleep", done: true },
-// ];
-
 function App() {
   return (
-    <div className="h-lvh">
+    <div>
       <Logo />
       <Form />
-      {/* <Checklist /> */}
       <Stats />
     </div>
   );
@@ -27,14 +21,32 @@ function Logo() {
 function Form() {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState([
-    { id: 1, text: "Hello", done: true },
-    { id: 2, text: "World", done: false },
-    { id: 3, text: "mamam", done: false },
+    { id: 1, text: "sholat", done: false },
+    { id: 2, text: "makan", done: false },
+    { id: 3, text: "tidur", done: false },
+    { id: 4, text: "belajar", done: false },
   ]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    // console.log(e.target.title.value);
+    if (title.trim() !== "") {
+      const newNote = {
+        id: new Date().getTime(),
+        text: title,
+      };
+      setNotes([...notes, newNote]);
+      setTitle("");
+    }
+  }
+
+  function handleInputChange(e) {
+    e.preventDefault();
+    setTitle(e.target.value);
+  }
+
+  function handleDeleteNote(id) {
+    const newNotes = notes.filter((note) => note.id !== id);
+    setNotes(newNotes);
   }
 
   return (
@@ -46,50 +58,73 @@ function Form() {
         <h2>ada yang mau dicatat?</h2>
         <input
           className="m-4 rounded-xl text-black px-3 py-1"
+          placeholder="Add a note"
           type="text"
           name="title"
           id=""
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={handleInputChange}
         />
         <button className="bg-green-400 rounded-lg px-3 py-1 text-white">
           ADD
         </button>
       </form>
-      <Checklist notes={notes} setNotes={setNotes} />
+      <Checklist
+        notes={notes}
+        setNotes={setNotes}
+        handleDeleteNote={handleDeleteNote}
+      />
     </>
   );
 }
 
-function Checklist({ notes, setNotes }) {
+function Checklist({ notes, setNotes, handleDeleteNote }) {
+  const toggleDone = (id) => {
+    setNotes(
+      notes.map((note) =>
+        note.id === id ? { ...note, done: !note.done } : note
+      )
+    );
+  };
+
   return (
     <div>
       <ul className="font-semibold p-5">
         {notes.map((note) => (
-          <Item key={note.id} note={note} />
+          <Item
+            key={note.id}
+            note={note}
+            handleDeleteNote={handleDeleteNote}
+            toggleDone={toggleDone}
+          />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ note }) {
+function Item({ note, handleDeleteNote, toggleDone }) {
   return (
     <li className="bg-slate-700 text-slate-300 text-white p-3 my-4 rounded-md flex justify-between">
       <div>
-        <input type="checkbox" />
+        <input type="checkbox" onChange={() => toggleDone(note.id)} />
         <span className={note.done ? "line-through m-2" : "m-2"}>
           {note.text}
         </span>
       </div>
-      <button className="bg-red-500 rounded-md px-2 py-1">delete</button>
+      <button
+        className="bg-red-500 rounded-md px-2 py-1"
+        onClick={() => handleDeleteNote(note.id)}
+      >
+        delete
+      </button>
     </li>
   );
 }
 
 function Stats() {
   return (
-    <footer className="bg-slate-700 text-slate-300 text-base text-center font-semibold w-full p-3 absolute bottom-0">
+    <footer className="bg-slate-700 text-slate-300 text-base text-center font-semibold w-full p-3">
       <span>kamu punya x catatan dan baru x yang di checklist (x%) </span>
     </footer>
   );
