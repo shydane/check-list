@@ -1,11 +1,11 @@
 import { useState } from "react";
+import "./App.css";
 
 function App() {
   return (
     <div>
       <Logo />
       <Form />
-      <Stats />
     </div>
   );
 }
@@ -74,6 +74,7 @@ function Form() {
         setNotes={setNotes}
         handleDeleteNote={handleDeleteNote}
       />
+      <Stats notes={notes} />
     </>
   );
 }
@@ -105,9 +106,13 @@ function Checklist({ notes, setNotes, handleDeleteNote }) {
 
 function Item({ note, handleDeleteNote, toggleDone }) {
   return (
-    <li className="bg-slate-700 text-slate-300 text-white p-3 my-4 rounded-md flex justify-between">
+    <li className="bg-slate-700 text-white p-3 my-4 rounded-md flex justify-between">
       <div>
-        <input type="checkbox" onChange={() => toggleDone(note.id)} />
+        <input
+          className="custom-checkbox"
+          type="checkbox"
+          onChange={() => toggleDone(note.id)}
+        />
         <span className={note.done ? "line-through m-2" : "m-2"}>
           {note.text}
         </span>
@@ -122,10 +127,19 @@ function Item({ note, handleDeleteNote, toggleDone }) {
   );
 }
 
-function Stats() {
+function Stats({ notes }) {
+  const totalNotes = notes.length;
+  const completedNotes = notes.filter((note) => note.done).length;
+  const completionRate = totalNotes
+    ? Math.round((completedNotes / totalNotes) * 100)
+    : 0;
+
   return (
     <footer className="bg-slate-700 text-slate-300 text-base text-center font-semibold w-full p-3">
-      <span>kamu punya x catatan dan baru x yang di checklist (x%) </span>
+      <span>
+        kamu punya {totalNotes} catatan dan baru {completedNotes} yang di
+        checklist ({completionRate.toFixed(2)}%){" "}
+      </span>
     </footer>
   );
 }
