@@ -12,11 +12,29 @@ function App() {
     setNotes((notes) => notes.filter((note) => note.id !== id));
   }
 
+  function handleToggleDone(id) {
+    setNotes((notes) => {
+      return notes.map((note) => {
+        if (note.id === id) {
+          return {
+            ...note,
+            done: !note.done,
+          };
+        }
+        return note;
+      });
+    });
+  }
+
   return (
     <div className="max-w-md m-auto bg-slate-800 text-slate-300 rounded-md overflow-hidden">
       <Logo />
       <Form onAddItem={handleAddNote} />
-      <Checklist notes={notes} onDeleteItem={handleDeleteNote} />
+      <Checklist
+        notes={notes}
+        onDeleteItem={handleDeleteNote}
+        onToggleDone={handleToggleDone}
+      />
       <Stats notes={notes} />
     </div>
   );
@@ -32,12 +50,6 @@ function Logo() {
 
 function Form({ onAddItem }) {
   const [title, setTitle] = useState("");
-  // const [notes, setNotes] = useState([
-  //   { id: 1, text: "sholat", done: false },
-  //   { id: 2, text: "makan", done: false },
-  //   { id: 3, text: "tidur", done: false },
-  //   { id: 4, text: "belajar", done: false },
-  // ]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -88,26 +100,32 @@ function Form({ onAddItem }) {
   );
 }
 
-function Checklist({ notes, onDeleteItem }) {
+function Checklist({ notes, onDeleteItem, onToggleDone }) {
   return (
     <div>
       <ul className="font-semibold p-5">
         {notes.map((note) => (
-          <Item key={note.id} note={note} onDeleteItem={onDeleteItem} />
+          <Item
+            key={note.id}
+            note={note}
+            onDeleteItem={onDeleteItem}
+            onToggleDone={onToggleDone}
+          />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ note, onDeleteItem }) {
+function Item({ note, onDeleteItem, onToggleDone }) {
   return (
     <li className="bg-slate-700 text-white p-3 my-4 rounded-md flex justify-between">
       <div>
         <input
           className="custom-checkbox"
           type="checkbox"
-          // onChange={() => toggleDone(note.id)}
+          vaalue={note.done}
+          onChange={() => onToggleDone(note.id)}
         />
         <span className={note.done ? "line-through m-2" : "m-2"}>
           {note.title}
@@ -126,9 +144,7 @@ function Item({ note, onDeleteItem }) {
 function Stats({ notes }) {
   const totalNotes = notes.length;
   const completedNotes = notes.filter((note) => note.done).length;
-  const completionRate = totalNotes
-    ? Math.round((completedNotes / totalNotes) * 100)
-    : 0;
+  const completionRate = totalNotes ? (completedNotes / totalNotes) * 100 : 0;
 
   return (
     <footer className="bg-slate-700 text-slate-300 text-base text-center font-semibold w-full p-3">
