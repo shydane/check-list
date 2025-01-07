@@ -26,6 +26,15 @@ function App() {
     });
   }
 
+  function handleDeleteNotes() {
+    const confirmed = window.confirm(
+      "apakah anda yakin ingin menghapus semua catatan yang telah ada?"
+    );
+    if (confirmed) {
+      setNotes([]);
+    }
+  }
+
   return (
     <div className="max-w-md m-auto bg-slate-800 text-slate-300 rounded-md overflow-hidden">
       <Logo />
@@ -34,6 +43,7 @@ function App() {
         notes={notes}
         onDeleteItem={handleDeleteNote}
         onToggleDone={handleToggleDone}
+        onDeleteItems={handleDeleteNotes}
       />
       <Stats notes={notes} />
     </div>
@@ -100,7 +110,7 @@ function Form({ onAddItem }) {
   );
 }
 
-function Checklist({ notes, onDeleteItem, onToggleDone }) {
+function Checklist({ notes, onDeleteItem, onToggleDone, onDeleteItems }) {
   const [sortBy, setSortBy] = useState("input");
 
   function sortNotes() {
@@ -119,7 +129,7 @@ function Checklist({ notes, onDeleteItem, onToggleDone }) {
 
   return (
     <div>
-      <div className="text-center">
+      <div className="flex justify-evenly text-center">
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
@@ -129,6 +139,12 @@ function Checklist({ notes, onDeleteItem, onToggleDone }) {
           <option value="judul">urutkan berdasarkan judul</option>
           <option value="status">urutkan berdasarkan status</option>
         </select>
+        <button
+          className="rounded-lg mt-5 py-1 px-3 bg-slate-900"
+          onClick={onDeleteItems}
+        >
+          Hapus
+        </button>
       </div>
       <ul className="font-semibold p-5">
         {sortedNotes.map((note) => (
