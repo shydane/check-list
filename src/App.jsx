@@ -84,7 +84,7 @@ function Form({ onAddItem }) {
       >
         <h2>Ada hal yang mau ditambahkan?</h2>
         <input
-          className="m-4 rounded-xl text-black px-3 py-1"
+          className="m-4 rounded-xl text-black px-3 py-1 bg-slate-900"
           placeholder="Add a note"
           type="text"
           name="title"
@@ -101,10 +101,37 @@ function Form({ onAddItem }) {
 }
 
 function Checklist({ notes, onDeleteItem, onToggleDone }) {
+  const [sortBy, setSortBy] = useState("input");
+
+  function sortNotes() {
+    switch (sortBy) {
+      case "judul":
+        return notes.slice().sort((a, b) => a.title.localeCompare(b.title));
+      case "status":
+        return notes.slice().sort((a, b) => Number(a.done) - Number(b.done));
+      case "input":
+      default:
+        return notes;
+    }
+  }
+
+  const sortedNotes = sortNotes();
+
   return (
     <div>
+      <div className="text-center">
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="mt-5 rounded-lg px-3 py-1 bg-slate-900"
+        >
+          <option value="input">urutkan berdasarkan input</option>
+          <option value="judul">urutkan berdasarkan judul</option>
+          <option value="status">urutkan berdasarkan status</option>
+        </select>
+      </div>
       <ul className="font-semibold p-5">
-        {notes.map((note) => (
+        {sortedNotes.map((note) => (
           <Item
             key={note.id}
             note={note}
@@ -124,7 +151,7 @@ function Item({ note, onDeleteItem, onToggleDone }) {
         <input
           className="custom-checkbox"
           type="checkbox"
-          vaalue={note.done}
+          value={note.done}
           onChange={() => onToggleDone(note.id)}
         />
         <span className={note.done ? "line-through m-2" : "m-2"}>
@@ -160,7 +187,7 @@ function Stats({ notes }) {
         {completionRate === 100
           ? "✅ kamu sudah melakukan semua catatan!"
           : `kamu punya ${totalNotes} catatan dan ${completedNotes} note yang sudah di
-          checklist (${completionRate}%)`}
+          checklist (${completionRate.toFixed(2)}%)`}
       </span>
     </footer>
   );
